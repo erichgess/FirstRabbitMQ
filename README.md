@@ -1,7 +1,7 @@
 FirstRabbitMQ
 =============
 
-A simple demonstration of RabbitMQ.
+A simple demonstration of RabbitMQ.  This is based off RabbitMQ tutorials available at www.rabbitmq.com.
 
 
 This consists of two projects:

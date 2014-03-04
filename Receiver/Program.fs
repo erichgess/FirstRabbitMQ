@@ -27,8 +27,10 @@ let main argv =
     // enumerated data source
     let qQuery = query{
                     for message in queue do
-                    select (message.ToUpper())
+                    let i = System.Int32.Parse(message)
+                    where (i%2 = 0)
+                    select i
                  }
-    qQuery |> Seq.iter (printfn "%s")
+    qQuery |> Seq.iter (printfn "%d")
     printfn "%A" argv
     0 // return an integer exit code

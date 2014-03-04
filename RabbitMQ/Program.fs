@@ -10,10 +10,12 @@ let main argv =
     use channel = connection.CreateModel()
 
     channel.QueueDeclare( "hello", false, false, false, null )
-    let message = "Hello, World"
-    let body = Encoding.UTF8.GetBytes(message)
-
+    
+    let mutable i = 0
     while true do
+        i <- i + 1
+        let message = string i
+        let body = Encoding.UTF8.GetBytes(message)
         channel.BasicPublish("", "hello", null, body)
         System.Threading.Thread.Sleep(2000)
 

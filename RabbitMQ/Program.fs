@@ -9,12 +9,13 @@ let main argv =
     use connection = factory.CreateConnection()
     use channel = connection.CreateModel()
 
-    channel.QueueDeclare( "hello", false, false, false, null )
+    channel.QueueDeclare( "hello", false, false, false, null ) |> ignore
     
     let mutable i = 0
     while true do
         i <- i + 1
-        let message = string i
+        let message = sprintf "%d,test" ((i + 1) % 10)  // send a message with a number from 0 to 9 along with some text
+        printfn "Sending: %s" message
         let body = Encoding.UTF8.GetBytes(message)
         channel.BasicPublish("", "hello", null, body)
         System.Threading.Thread.Sleep(2000)

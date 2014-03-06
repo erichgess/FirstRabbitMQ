@@ -10,27 +10,37 @@ let main argv =
     use connection = factory.CreateConnection()
     use channel = connection.CreateModel()
 
-    channel.QueueDeclare( "hello", false, false, false, null )
-    let consumer = new QueueingBasicConsumer(channel)
-    channel.BasicConsume("hello", true, consumer)
+    channel.QueueDeclare( "hello", false, false, false, null ) |> ignore
+    let consumer = new QueueingBasicConsumer(channel) 
+    channel.BasicConsume("hello", true, consumer) |> ignore
 
     // I wrap the queue in a sequence expression
     let queue = seq{
                     while true do
-                        let ea = consumer.Queue.Dequeue() :> BasicDeliverEventArgs
+                        let ea = consumer.Queue.Dequeue()
                         let body = ea.Body
                         let message = Encoding.UTF8.GetString(body)
                         yield message
                 }
 
-    // Which allows me to use queries on the queue, exactly as if it were any other
-    // enumerated data source
+    let validIds = [1; 2; 3; 4]
+    let idQuery = query{
+                    for id in validIds do
+                    select id
+                  }
+
+    // This will read all the messages coming in from RabbitMQ
+    // the messages have the format "id,text"
+    // this query extracts the id and then joins on the list of
+    // valid Ids.  So that only messages which have a valid id will
+    // be selected (the rest are all discarded).
     let qQuery = query{
                     for message in queue do
-                    let i = System.Int32.Parse(message)
-                    where (i%2 = 0)
-                    select i
+                    let id,text = message.Split(',') |> (fun s -> (System.Int32.Parse(s.[0]), s.[1]))
+                    join validId in validIds on
+                        (id = validId)
+                    select (id,text)
                  }
-    qQuery |> Seq.iter (printfn "%d")
+    qQuery |> Seq.iter (printfn "%A")
     printfn "%A" argv
     0 // return an integer exit code

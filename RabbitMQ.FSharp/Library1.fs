@@ -5,7 +5,7 @@ open RabbitMQ.Client.Events
 open System.Text
 
 module Client =
-    type Queue = { Name: string; ReadFrom: unit -> string; PublishTo: string -> unit }
+    type Queue = { Name: string; Read: unit -> string; Publish: string -> unit }
 
     let readFromQueue (consumer:QueueingBasicConsumer) queueName =
         let ea = consumer.Queue.Dequeue()
@@ -26,4 +26,6 @@ module Client =
             let consumer = new QueueingBasicConsumer(channel) 
             channel.BasicConsume(queueName, true, consumer) |> ignore
 
-            {Name = queueName; ReadFrom = (fun () -> readFromQueue consumer queueName); PublishTo = (publishToQueue channel queueName)}
+            {Name = queueName; 
+            Read = (fun () -> readFromQueue consumer queueName); 
+            Publish = (publishToQueue channel queueName)}

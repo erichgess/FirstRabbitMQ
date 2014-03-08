@@ -35,3 +35,12 @@ module Client =
 
     let createQueueFuntions channel =
         (readFromQueue channel, publishToQueue channel)
+
+    let createQueueConsumer channel queueName =
+        let consumer = new QueueingBasicConsumer(channel) 
+        channel.BasicConsume(queueName, true, consumer) |> ignore
+
+        fun () ->
+            let ea = consumer.Queue.Dequeue()
+            let body = ea.Body
+            Encoding.UTF8.GetString(body)

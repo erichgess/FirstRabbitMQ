@@ -57,6 +57,13 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RabbitMQ.FSharp\RabbitMQ.FSharp.fsproj">
+      <Name>RabbitMQ.FSharp</Name>
+      <Project>{e72083da-2a81-4704-8beb-953b836dff9c}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
   </PropertyGroup>

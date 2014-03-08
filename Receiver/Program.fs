@@ -9,14 +9,14 @@ open RabbitMQ.FSharp.Client
 let main argv = 
     let connection = openConnection "localhost"
     let myChannel = openChannel connection
-    let connectToQueueOnMyChannel = connectToQueue connection myChannel
+    let (readFrom,_) = createQueueFuntions myChannel
 
-    let helloQueue = connectToQueueOnMyChannel "hello"
+    let helloQueue = readFrom "hello"
 
     // I wrap the queue in a sequence expression
     //let queue = seq{
     while true do
-        let message = helloQueue.Read ()
+        let message = helloQueue ()
         match message with
         | Some(s) -> printfn "%s" s
         | _ -> ()

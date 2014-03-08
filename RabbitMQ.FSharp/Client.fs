@@ -5,7 +5,7 @@ open RabbitMQ.Client.Events
 open System.Text
 
 module Client =
-    type Queue = { Name: string; Read: unit -> string; Publish: string -> unit }
+    type Queue = { Name: string; Read: unit -> string option; Publish: string -> unit }
 
     let openConnection address = 
         let factory = new ConnectionFactory(HostName = address)
@@ -35,7 +35,7 @@ module Client =
                         if ea <> null then
                             let body = ea.Body
                             let message = Encoding.UTF8.GetString(body)
-                            message
+                            Some message
                         else
-                            ""); 
+                            None); 
         Publish = (publishToQueue channel queueName)}

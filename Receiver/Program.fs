@@ -17,7 +17,9 @@ let main argv =
     //let queue = seq{
     while true do
         let message = helloQueue.Read ()
-        printfn "%A" message
+        match message with
+        | Some(s) -> printfn "%s" s
+        | _ -> ()
                 //}
 
     //queue |> Seq.iter (printfn "%A")

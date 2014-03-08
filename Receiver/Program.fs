@@ -11,17 +11,12 @@ let main argv =
     let myChannel = openChannel connection
     let (readFrom,_) = createQueueFuntions myChannel
 
-    let helloQueue = readFrom "hello"
+    let readFromHelloQueue = readFrom "hello"
 
-    // I wrap the queue in a sequence expression
-    //let queue = seq{
     while true do
-        let message = helloQueue ()
+        let message = readFromHelloQueue()
         match message with
         | Some(s) -> printfn "%s" s
         | _ -> ()
-                //}
 
-    //queue |> Seq.iter (printfn "%A")
-    printfn "%A" argv
     0 // return an integer exit code

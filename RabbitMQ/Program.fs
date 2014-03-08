@@ -20,5 +20,4 @@ let main argv =
         message |> writeToHelloQueue
         System.Threading.Thread.Sleep(1000)
 
-    printfn "%A" argv
     0 // return an integer exit code

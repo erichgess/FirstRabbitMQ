@@ -19,7 +19,8 @@ module Client =
     let readFromQueue (consumer:QueueingBasicConsumer) queueName =
         let ea = consumer.Queue.Dequeue()
         let body = ea.Body
-        Encoding.UTF8.GetString(body)
+        let message = Encoding.UTF8.GetString(body)
+        message
 
     let publishToQueue (channel:IModel) queueName (message:string) =
         let body = Encoding.UTF8.GetBytes(message)
@@ -27,9 +28,11 @@ module Client =
 
     let connectToQueue connection (channel:IModel) queueName =            // I don't have to declare the type of connection, because F# can infer the type from my call to openChannel
         declareQueue channel queueName |> ignore
-        let consumer = new QueueingBasicConsumer(channel) 
-        channel.BasicConsume(queueName, true, consumer) |> ignore
 
         {Name = queueName; 
-        Read = (fun () -> readFromQueue consumer queueName); 
+        Read = (fun () -> 
+                        let ea = channel.BasicGet(queueName, true)
+                        let body = ea.Body
+                        let message = Encoding.UTF8.GetString(body)
+                        message); 
         Publish = (publishToQueue channel queueName)}

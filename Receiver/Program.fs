@@ -14,12 +14,12 @@ let main argv =
     let helloQueue = connectToQueueOnMyChannel "hello"
 
     // I wrap the queue in a sequence expression
-    let queue = seq{
-                    while true do
-                        let message = helloQueue.Read ()
-                        yield message
-                }
+    //let queue = seq{
+    while true do
+        let message = helloQueue.Read ()
+        printfn "%A" message
+                //}
 
-    queue |> Seq.iter (printfn "%A")
+    //queue |> Seq.iter (printfn "%A")
     printfn "%A" argv
     0 // return an integer exit code

@@ -17,8 +17,6 @@ module Client =
     let declareQueue (channel:IModel) queueName = channel.QueueDeclare( queueName, false, false, false, null )
 
     let readFromQueue (channel:IModel) queueName =
-        declareQueue channel queueName |> ignore
-
         fun () -> 
             let ea = channel.BasicGet(queueName, true)
             if ea <> null then
@@ -29,14 +27,15 @@ module Client =
                 None
 
     let publishToQueue (channel:IModel) queueName (message:string) =
-        declareQueue channel queueName |> ignore
         let body = Encoding.UTF8.GetBytes(message)
         channel.BasicPublish("", queueName, null, body)
         
     let createQueueReader channel queue = 
+        declareQueue channel queue |> ignore
         readFromQueue channel queue
 
     let createQueueWriter channel queue =
+        declareQueue channel queue |> ignore
         publishToQueue channel queue
 
     let createQueueConsumer channel queueName =

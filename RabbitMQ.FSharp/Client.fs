@@ -35,17 +35,3 @@ module Client =
 
     let createQueueFuntions channel =
         (readFromQueue channel, publishToQueue channel)
-
-    let connectToQueue connection (channel:IModel) queueName =            // I don't have to declare the type of connection, because F# can infer the type from my call to openChannel
-        declareQueue channel queueName |> ignore
-
-        {Name = queueName; 
-        Read = (fun () -> 
-                        let ea = channel.BasicGet(queueName, true)
-                        if ea <> null then
-                            let body = ea.Body
-                            let message = Encoding.UTF8.GetString(body)
-                            Some message
-                        else
-                            None); 
-        Publish = (publishToQueue channel queueName)}

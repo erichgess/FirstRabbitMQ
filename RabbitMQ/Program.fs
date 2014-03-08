@@ -8,9 +8,8 @@ open RabbitMQ.FSharp.Client
 let main argv = 
     let connection = openConnection "localhost"
     let channel = openChannel connection
-    let (_,writeTo) = createQueueFuntions channel
     
-    let writeToHelloQueue = writeTo "hello"
+    let writeToHelloQueue = createQueueWriter channel "hello"
 
     let mutable i = 0
     while true do

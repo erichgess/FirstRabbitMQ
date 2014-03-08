@@ -9,7 +9,6 @@ open RabbitMQ.FSharp.Client
 let main argv = 
     let connection = openConnection "localhost"
     let myChannel = openChannel connection
-    let (readFrom,_) = createQueueFuntions myChannel
 
     let readFromHelloQueue = createQueueConsumer myChannel "hello"
 

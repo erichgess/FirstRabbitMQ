@@ -32,9 +32,12 @@ module Client =
         declareQueue channel queueName |> ignore
         let body = Encoding.UTF8.GetBytes(message)
         channel.BasicPublish("", queueName, null, body)
+        
+    let createQueueReader channel queue = 
+        readFromQueue channel queue
 
-    let createQueueFuntions channel =
-        (readFromQueue channel, publishToQueue channel)
+    let createQueueWriter channel queue =
+        publishToQueue channel queue
 
     let createQueueConsumer channel queueName =
         let consumer = new QueueingBasicConsumer(channel) 

@@ -17,7 +17,7 @@ module Client =
         channel.BasicPublish("", queueName, null, body)
 
     let connectToRabbitMq address =
-        let factory = new ConnectionFactory(HostName = "localhost")
+        let factory = new ConnectionFactory(HostName = address)
         use connection = factory.CreateConnection()
         use channel = connection.CreateModel()
 

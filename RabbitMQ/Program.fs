@@ -6,8 +6,8 @@ open RabbitMQ.FSharp.Client
 
 [<EntryPoint>]
 let main argv = 
-    let connection = openConnection "localhost"
-    let channel = openChannel connection
+    let connection = connectToRabbitMqServerAt "localhost"
+    let channel = openChannelOn connection
     
     let writeToHelloQueue = createQueueWriter channel "hello"
 

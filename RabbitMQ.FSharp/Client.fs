@@ -7,16 +7,16 @@ open System.Text
 module Client =
     type Queue = { Name: string; Read: unit -> string option; Publish: string -> unit }
 
-    let openConnection address = 
+    let connectToRabbitMqServerAt address = 
         let factory = new ConnectionFactory(HostName = address)
         factory.CreateConnection()
 
     // I need to declare the type for connection because F# can't infer types on classes
-    let openChannel (connection:IConnection) = connection.CreateModel()
+    let openChannelOn (connection:IConnection) = connection.CreateModel()
 
-    let declareQueue (channel:IModel) queueName = channel.QueueDeclare( queueName, false, false, false, null )
+    let private declareQueue (channel:IModel) queueName = channel.QueueDeclare( queueName, false, false, false, null )
 
-    let publishToQueue (channel:IModel) queueName (message:string) =
+    let private publishToQueue (channel:IModel) queueName (message:string) =
         let body = Encoding.UTF8.GetBytes(message)
         channel.BasicPublish("", queueName, null, body)
         

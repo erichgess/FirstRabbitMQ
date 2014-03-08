@@ -3,23 +3,20 @@
 open System.Text
 open RabbitMQ.Client
 open RabbitMQ.Client.Events
+open RabbitMQ.FSharp.Client
 
 [<EntryPoint>]
 let main argv = 
-    let factory = new ConnectionFactory(HostName = "localhost")
-    use connection = factory.CreateConnection()
-    use channel = connection.CreateModel()
+    let connection = openConnection "localhost"
+    let myChannel = openChannel connection
+    let connectToQueueOnMyChannel = connectToQueue connection myChannel
 
-    channel.QueueDeclare( "hello", false, false, false, null ) |> ignore
-    let consumer = new QueueingBasicConsumer(channel) 
-    channel.BasicConsume("hello", true, consumer) |> ignore
+    let helloQueue = connectToQueueOnMyChannel "hello"
 
     // I wrap the queue in a sequence expression
     let queue = seq{
                     while true do
-                        let ea = consumer.Queue.Dequeue()
-                        let body = ea.Body
-                        let message = Encoding.UTF8.GetString(body)
+                        let message = helloQueue.Read ()
                         yield message
                 }
 

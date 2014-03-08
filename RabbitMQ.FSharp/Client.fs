@@ -32,7 +32,10 @@ module Client =
         {Name = queueName; 
         Read = (fun () -> 
                         let ea = channel.BasicGet(queueName, true)
-                        let body = ea.Body
-                        let message = Encoding.UTF8.GetString(body)
-                        message); 
+                        if ea <> null then
+                            let body = ea.Body
+                            let message = Encoding.UTF8.GetString(body)
+                            message
+                        else
+                            ""); 
         Publish = (publishToQueue channel queueName)}

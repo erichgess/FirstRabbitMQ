@@ -6,12 +6,6 @@ open RabbitMQ.FSharp.Client
 
 [<EntryPoint>]
 let main argv = 
-//    let factory = new ConnectionFactory(HostName = "localhost")
-//    use connection = factory.CreateConnection()
-//    use channel = connection.CreateModel()
-//
-//    channel.QueueDeclare( "hello", false, false, false, null ) |> ignore
-
     let connection = openConnection "localhost"
     let channel = openChannel connection
     let queue = (connectToQueue connection channel) "hello"

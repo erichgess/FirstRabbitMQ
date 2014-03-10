@@ -5,13 +5,10 @@ open RabbitMQ.Client.Events
 open System.Text
 
 module Client =
-    type Queue = { Name: string; Read: unit -> string option; Publish: string -> unit }
-
     let connectToRabbitMqServerAt address = 
         let factory = new ConnectionFactory(HostName = address)
         factory.CreateConnection()
 
-    // I need to declare the type for connection because F# can't infer types on classes
     let openChannelOn (connection:IConnection) = connection.CreateModel()
 
     let private declareQueue (channel:IModel) queueName = channel.QueueDeclare( queueName, false, false, false, null )
